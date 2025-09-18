@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horse Web - Layout</title>
+    <style>
+        :root {
+            --dark-bg: #1a150f;
+            --light-bg: #f9eecd;
+            --text-color: #d1b777;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18vw;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .menu-toggle {
+            width: 30px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            background: var(--text-color);
+            margin: 5px 0;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1500;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .menu-panel {
+            position: fixed;
+            top: 0;
+            right: -520px;
+            width: 470px;
+            height: 100%;
+            background: rgba(26, 21, 15, 0.98);
+            padding: 18px;
+            transition: right .3s ease;
+            z-index: 2000;
+        }
+
+        .menu-panel.active {
+            right: 0;
+        }
+
+        .menu-links {
+            list-style: none;
+            padding: 0;
+            margin-top: 50px;
+        }
+
+        .menu-links li {
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .1);
+        }
+
+        .menu-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color .2s;
+        }
+
+        .menu-links a:hover {
+            color: var(--text-color);
+        }
+
+        footer {
+            padding: 30px 18vw;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            background: black;
+            padding-bottom: 10vw;
+        }
+
+        footer img {
+            width: 122px;
+            height: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo"><img src="./images/logo.png" alt="Horse Logo"></div>
+        <div class="menu-toggle" id="menuToggle"><span></span><span></span><span></span></div>
+    </header>
+
+    <!-- Footer -->
+    <footer>
+        <div>
+            <img src="./images/logo.png" alt="logo">
+            <div style="margin-top:8px">contact@horsestudio.com<br>+842 8498 894</div>
+        </div>
+        <div>
+            <a style="color:var(--text-color);margin-left:8px" href="#">FB</a>
+            <a style="color:var(--text-color);margin-left:8px" href="#">YT</a>
+        </div>
+    </footer>
+
+    <!-- Side menu -->
+    <aside class="menu-panel" id="menuPanel">
+        <ul class="menu-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </aside>
+    <div class="overlay" id="overlay"></div>
+
+    <script>
+        // Menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const menuPanel = document.getElementById('menuPanel');
+        const overlay = document.getElementById('overlay');
+
+        menuToggle.addEventListener('click', () => {
+            menuPanel.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        function closeMenu() {
+            menuPanel.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        overlay.addEventListener('click', closeMenu);
+    </script>
+</body>
+
+</html>

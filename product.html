@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Horse Web - Bộ sưu tập</title>
+  <style>
+    :root {
+      --dark-bg: #1a150f;
+      --light-bg: #f9eecd;
+      --text-color: #d1b777;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: var(--dark-bg);
+      color: var(--text-color);
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18vw;
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    .logo img {
+      height: 40px;
+    }
+
+    .menu-toggle {
+      width: 30px;
+      cursor: pointer;
+    }
+
+    .menu-toggle span {
+      display: block;
+      height: 3px;
+      background: var(--text-color);
+      margin: 5px 0;
+    }
+
+    /* Overlay cho menu */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1500;
+      display: none;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    /* Sidebar menu */
+    .menu-panel {
+      position: fixed;
+      top: 0;
+      right: -520px;
+      width: 470px;
+      height: 100%;
+      background: rgba(26, 21, 15, 0.98);
+      padding: 18px;
+      transition: right .3s ease;
+      z-index: 2000;
+    }
+
+    .menu-panel.active {
+      right: 0;
+    }
+
+    .menu-links {
+      list-style: none;
+      padding: 0;
+      margin-top: 50px;
+    }
+
+    .menu-links li {
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .menu-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.1rem;
+      transition: color .2s;
+    }
+
+    .menu-links a:hover {
+      color: var(--text-color);
+    }
+
+    /* Bộ lọc */
+    .filter-section {
+      display: flex;
+      justify-content: center;
+      margin: 30px 0 10px;
+    }
+
+    .filter-box {
+      position: relative;
+      display: inline-block;
+    }
+
+    .filter {
+      padding: 12px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--text-color);
+      font-size: 15px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-color);
+      appearance: none;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 200px;
+      text-align: center;
+    }
+
+    .filter:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #e2c97a;
+    }
+
+    .filter:focus {
+      box-shadow: 0 0 0 3px rgba(209, 183, 119, 0.4);
+    }
+
+    .filter-box::after {
+      content: "▼";
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      color: var(--text-color);
+      pointer-events: none;
+    }
+
+    /* Masonry gallery */
+    .gallery {
+      column-count: 4;
+      column-gap: 10px;
+      padding: 20px 18vw;
+    }
+
+    .gallery-item {
+      margin-bottom: 10px;
+      break-inside: avoid;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .gallery-item.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      display: block;
+      border-radius: 6px;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-item img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Button Xem thêm */
+    .load-more-box {
+      text-align: center;
+      margin: 20px;
+    }
+
+    #loadMore {
+      padding: 10px 20px;
+      border: none;
+      background: var(--text-color);
+      color: #000;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    #loadMore:hover {
+      background: #b89d5d;
+    }
+
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 3000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: 95vw;
+      max-height: 95vh;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .lightbox .close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 32px;
+      color: #fff;
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 5px 12px;
+      border-radius: 50%;
+      transition: background 0.3s;
+    }
+
+    .lightbox .close:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Footer */
+    footer {
+      padding: 30px 18vw;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      background: black;
+      padding-bottom: 10vw;
+    }
+
+    footer img {
+      width: 122px;
+      height: 40px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo"><img src="./images/logo.png" alt="Horse Logo"></div>
+    <div class="menu-toggle" id="menuToggle"><span></span><span></span><span></span></div>
+  </header>
+
+  <!-- Bộ lọc -->
+  <div class="filter-section">
+    <div class="filter-box">
+      <select class="filter">
+        <option value="">Bộ lọc</option>
+        <option value="moi">Mới nhất</option>
+        <option value="pho-bien">Phổ biến</option>
+        <option value="yeu-thich">Yêu thích</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Gallery -->
+  <div class="gallery" id="gallery">
+    <div class="gallery-item show"><img src="https://picsum.photos/id/1015/400/600" alt=""></div>
+    <div class="gallery-item show"><img src="https://picsum.photos/id/1025/400/400" alt=""></div>
+    <div class="gallery-item show"><img src="https://picsum.photos/id/1035/400/500" alt=""></div>
+    <div class="gallery-item show"><img src="https://picsum.photos/id/1045/400/450" alt=""></div>
+    <div class="gallery-item show"><img src="https://picsum.photos/id/1055/400/550" alt=""></div>
+    <div class="gallery-item show"><img src="https://picsum.photos/id/1065/400/600" alt=""></div>
+    <div class="gallery-item show"><img src="https://picsum.photos/id/1075/400/500" alt=""></div>
+    <div class="gallery-item show"><img src="https://picsum.photos/id/1085/400/400" alt=""></div>
+  </div>
+
+  <!-- Button Xem thêm -->
+  <div class="load-more-box">
+    <button id="loadMore">Xem thêm</button>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <span class="close" id="closeBtn">&times;</span>
+    <img id="lightboxImg" src="" alt="">
+  </div>
+
+  <!-- Sidebar menu -->
+  <aside class="menu-panel" id="menuPanel">
+    <ul class="menu-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </aside>
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Footer -->
+  <footer>
+    <div>
+      <img src="./images/logo.png" alt="logo">
+      <div style="margin-top:8px">contact@horsestudio.com<br>+842 8498 894</div>
+    </div>
+    <div>
+      <a style="color:var(--text-color);margin-left:8px" href="#">FB</a>
+      <a style="color:var(--text-color);margin-left:8px" href="#">YT</a>
+    </div>
+  </footer>
+
+  <script>
+    // Lightbox
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const closeBtn = document.getElementById('closeBtn');
+
+    function bindLightbox(img) {
+      img.addEventListener('click', () => {
+        lightboxImg.src = img.src;
+        lightbox.classList.add('active');
+      });
+    }
+
+    document.querySelectorAll('.gallery-item img').forEach(img => {
+      bindLightbox(img);
+    });
+
+    closeBtn.addEventListener('click', () => {
+      lightbox.classList.remove('active');
+    });
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) lightbox.classList.remove('active');
+    });
+
+    // Load more
+    const gallery = document.getElementById('gallery');
+    const loadMoreBtn = document.getElementById('loadMore');
+
+    const moreImages = [
+      "https://picsum.photos/id/1025/1200/1800",
+      "https://picsum.photos/id/1025/1200/1800",
+      "https://picsum.photos/id/1025/1200/1800",
+      "https://picsum.photos/id/1025/1200/1800",
+      "https://picsum.photos/id/1025/1200/1800",
+      "./images/Chuyên Gia Đào Tạo2.png",
+      "./images/Hoàng Thái Sơn.png"
+    ];
+
+    let index = 0;
+    const perClick = 3;
+
+    loadMoreBtn.addEventListener('click', () => {
+      for (let i = 0; i < perClick; i++) {
+        if (index >= moreImages.length) {
+          loadMoreBtn.style.display = "none";
+          break;
+        }
+
+        const img = document.createElement('img');
+        img.src = moreImages[index];
+        img.alt = "Ảnh mới";
+
+        const item = document.createElement('div');
+        item.className = "gallery-item";
+        item.appendChild(img);
+
+        gallery.appendChild(item);
+
+        setTimeout(() => item.classList.add('show'), 50);
+
+        bindLightbox(img);
+        index++;
+      }
+    });
+
+    // Sidebar menu toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const menuPanel = document.getElementById('menuPanel');
+    const overlay = document.getElementById('overlay');
+
+    menuToggle.addEventListener('click', () => {
+      menuPanel.classList.toggle('active');
+      overlay.classList.toggle('active');
+    });
+
+    function closeMenu() {
+      menuPanel.classList.remove('active');
+      overlay.classList.remove('active');
+    }
+
+    overlay.addEventListener('click', closeMenu);
+  </script>
+</body>
+
+</html>
