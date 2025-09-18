@@ -257,6 +257,22 @@
       width: 122px;
       height: 40px;
     }
+    @media (max-width: 1024px) {
+            .menu-panel {
+                right: -320px;
+                /* lưu ý đổi theo width để tránh bị lộ */
+                width: 200px;
+            }
+        }
+
+        /* Màn hình nhỏ hơn 431px */
+        @media (max-width: 431px) {
+            .menu-panel {
+                right: -320px;
+                /* lưu ý đổi theo width để tránh bị lộ */
+                width: 100px;
+            }
+        }
   </style>
 </head>
 
