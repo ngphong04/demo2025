@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Horse Web</title>
+  <style>
+    :root {
+      --dark-bg: #1a150f;
+      --light-bg: #f9eecd;
+      --text-color: #d1b777;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: var(--dark-bg);
+      color: var(--text-color);
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 5vw;
+    }
+
+    .logo img {
+      height: 40px;
+    }
+
+    .contact-info {
+      font-size: 1rem;
+      color: var(--text-color);
+    }
+
+    .menu-toggle {
+      cursor: pointer;
+      width: 30px;
+      height: 25px;
+      position: relative;
+    }
+
+    .menu-toggle span {
+      display: block;
+      height: 3px;
+      background-color: var(--text-color);
+      margin: 5px 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    /* Carousel */
+    .carousel-container {
+      width: 100%;
+      max-width: 1000px;
+      height: 60vh;
+      margin: 0 auto 40px;
+      perspective: 2000px;
+    }
+
+    .carousel {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform-style: preserve-3d;
+      position: relative;
+      user-select: none;
+    }
+
+    .slide {
+      position: absolute;
+      width: 28%;
+      max-width: 280px;
+      height: 80%;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      transition: transform 0.8s ease;
+      background: #fff;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Main Content */
+    .content-container {
+      padding: 20px 5vw;
+      background-color: var(--dark-bg);
+      color: #fff;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 10px;
+      width: 100%;
+    }
+
+    .grid-item {
+      background-color: var(--light-bg);
+      border: 1px solid black;
+      min-height: 200px;
+    }
+
+    .grid-item.text-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--light-bg);
+    }
+
+    /* View More Button */
+    .view-more-container {
+      text-align: center;
+      padding: 30px 0;
+    }
+
+    .view-more-btn {
+      padding: 10px 25px;
+      background-color: transparent;
+      border: 1px solid var(--text-color);
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--dark-bg);
+      padding: 30px;
+      text-align: center;
+    }
+
+    .footer-content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 5vw;
+      gap: 20px;
+    }
+
+    .footer-logo img {
+      height: 30px;
+    }
+
+    .contact-details {
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+
+    .social-icons a {
+      color: var(--text-color);
+      font-size: 24px;
+      margin-left: 10px;
+    }
+
+    /* Menu */
+    .menu-panel {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 250px;
+      height: 100%;
+      background-color: rgba(26, 21, 15, 0.95);
+      z-index: 1000;
+      transition: right 0.3s ease-in-out;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .menu-panel.active {
+      right: 0;
+    }
+
+    .close-btn {
+      color: white;
+      font-size: 30px;
+      cursor: pointer;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+    }
+
+    .menu-links {
+      list-style: none;
+      padding: 0;
+      margin-top: 60px;
+    }
+
+    .menu-links li {
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .menu-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.2rem;
+      display: block;
+      transition: color 0.2s;
+    }
+
+    .menu-links a:hover {
+      color: var(--text-color);
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 768px) {
+      header {
+        padding: 15px 20px;
+      }
+      .contact-info {
+        display: none; /* Ẩn số điện thoại trên mobile */
+      }
+      .carousel-container {
+        height: 50vh;
+      }
+      .slide {
+        width: 60%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .slide {
+        width: 80%;
+      }
+      .footer-content {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <img src="https://i.ibb.co/Y0Fw97w/logo.png" alt="Horse Logo">
+    </div>
+    <div class="contact-info">
+      2468 898 876
+    </div>
+    <div class="menu-toggle" id="menuToggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </header>
+
+  <main>
+    <!-- Carousel dưới header -->
+    <div class="carousel-container">
+      <div class="carousel">
+        <div class="slide"><img src="https://picsum.photos/id/1015/400/600" alt=""></div>
+        <div class="slide"><img src="https://picsum.photos/id/1025/400/600" alt=""></div>
+        <div class="slide"><img src="https://picsum.photos/id/1035/400/600" alt=""></div>
+        <div class="slide"><img src="https://picsum.photos/id/1045/400/600" alt=""></div>
+        <div class="slide"><img src="https://picsum.photos/id/1055/400/600" alt=""></div>
+      </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="content-container">
+      <div class="content-grid">
+        <div class="grid-item full-row text-item">
+          <h2>...</h2>
+        </div>
+        <div class="grid-item"></div>
+        <div class="grid-item"></div>
+        <div class="grid-item single-column"></div>
+        <div class="grid-item"></div>
+        <div class="grid-item"></div>
+        <div class="grid-item"></div>
+        <div class="grid-item"></div>
+        <div class="grid-item"></div>
+        <div class="grid-item"></div>
+      </div>
+    </div>
+
+    <div class="view-more-container">
+      <a href="#" class="view-more-btn">Xem Thêm</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-logo">
+        <img src="https://i.ibb.co/Y0Fw97w/logo.png" alt="Horse Logo">
+        <div class="contact-details">
+          <p>contact@horsestudio.com</p>
+          <p>+842 8498 894</p>
+        </div>
+      </div>
+      <div class="social-icons">
+        <a href="#" class="fa fa-facebook"></a>
+        <a href="#" class="fa fa-youtube"></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Side Menu -->
+  <div class="menu-panel" id="menuPanel">
+    <span class="close-btn" onclick="closeMenu()">&times;</span>
+    <ul class="menu-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+
+  <script>
+    // Menu toggle
+    document.addEventListener('DOMContentLoaded', () => {
+      const menuToggle = document.getElementById('menuToggle');
+      const menuPanel = document.getElementById('menuPanel');
+
+      menuToggle.addEventListener('click', () => {
+        menuPanel.classList.toggle('active');
+      });
+    });
+
+    function closeMenu() {
+      const menuPanel = document.getElementById('menuPanel');
+      menuPanel.classList.remove('active');
+    }
+
+    // Carousel
+    const slides = document.querySelectorAll('.slide');
+    let current = 0;
+    let autoSlide;
+    let startX = 0;
+    let endX = 0;
+
+    function updateCarousel(){
+      const total = slides.length;
+      slides.forEach((slide, i) => {
+        let offset = (i - current + total) % total; 
+
+        if (offset === 0) {
+          slide.style.transform = "translateX(0) scale(1.2)";
+          slide.style.zIndex = 5;
+        } else if (offset === 1) {
+          slide.style.transform = "translateX(220px) rotateY(-25deg) scale(0.9)";
+          slide.style.zIndex = 4;
+        } else if (offset === total - 1) {
+          slide.style.transform = "translateX(-220px) rotateY(25deg) scale(0.9)";
+          slide.style.zIndex = 4;
+        } else {
+          slide.style.transform = `translateX(${offset*300}px) scale(0)`;
+          slide.style.zIndex = 1;
+        }
+        slide.style.opacity = "1";
+      });
+    }
+
+    function showNext(){
+      current = (current + 1) % slides.length;
+      updateCarousel();
+    }
+
+    function showPrev(){
+      current = (current - 1 + slides.length) % slides.length;
+      updateCarousel();
+    }
+
+    function startAuto(){
+      autoSlide = setInterval(showNext, 3000);
+    }
+
+    function resetAuto(){
+      clearInterval(autoSlide);
+      startAuto();
+    }
+
+    const carousel = document.querySelector('.carousel');
+
+    // Chuột
+    carousel.addEventListener('mousedown', e => {
+      startX = e.clientX;
+    });
+    carousel.addEventListener('mouseup', e => {
+      endX = e.clientX;
+      handleSwipe();
+    });
+
+    // Mobile
+    carousel.addEventListener('touchstart', e => {
+      startX = e.touches[0].clientX;
+    });
+    carousel.addEventListener('touchend', e => {
+      endX = e.changedTouches[0].clientX;
+      handleSwipe();
+    });
+
+    function handleSwipe(){
+      const diff = endX - startX;
+      if (Math.abs(diff) > 50) {
+        if (diff < 0) {
+          showNext();
+        } else {
+          showPrev();
+        }
+        resetAuto();
+      }
+    }
+
+    updateCarousel();
+    startAuto();
+  </script>
+</body>
+</html>
