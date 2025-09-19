@@ -47,7 +47,7 @@
       margin: 5px 0;
     }
 
-    /* Overlay cho menu */
+    /* Sidebar overlay */
     .overlay {
       position: fixed;
       top: 0;
@@ -149,7 +149,7 @@
       pointer-events: none;
     }
 
-    /* Masonry gallery */
+    /* Gallery Masonry */
     .gallery {
       column-count: 4;
       column-gap: 10px;
@@ -175,13 +175,14 @@
       display: block;
       border-radius: 6px;
       transition: transform 0.3s ease;
+      object-fit: cover;
     }
 
     .gallery-item img:hover {
       transform: scale(1.05);
     }
 
-    /* Button Xem thêm */
+    /* Load more button */
     .load-more-box {
       text-align: center;
       margin: 20px;
@@ -257,22 +258,32 @@
       width: 122px;
       height: 40px;
     }
-    @media (max-width: 1024px) {
-            .menu-panel {
-                right: -320px;
-                /* lưu ý đổi theo width để tránh bị lộ */
-                width: 200px;
-            }
-        }
 
-        /* Màn hình nhỏ hơn 431px */
-        @media (max-width: 431px) {
-            .menu-panel {
-                right: -320px;
-                /* lưu ý đổi theo width để tránh bị lộ */
-                width: 100px;
-            }
-        }
+    /* Responsive Masonry */
+    @media (max-width: 1024px) {
+      .gallery {
+        column-count: 3;
+        padding: 20px 5vw;
+      }
+      .menu-panel {
+        right: -320px;
+        width: 200px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .gallery {
+        column-count: 2;
+        padding: 15px 3vw;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .gallery {
+        column-count: 1;
+        padding: 10px 2vw;
+      }
+    }
   </style>
 </head>
 
@@ -283,7 +294,7 @@
     <div class="menu-toggle" id="menuToggle"><span></span><span></span><span></span></div>
   </header>
 
-  <!-- Bộ lọc -->
+  <!-- Filter -->
   <div class="filter-section">
     <div class="filter-box">
       <select class="filter">
@@ -303,11 +314,9 @@
     <div class="gallery-item show"><img src="https://picsum.photos/id/1045/400/450" alt=""></div>
     <div class="gallery-item show"><img src="https://picsum.photos/id/1055/400/550" alt=""></div>
     <div class="gallery-item show"><img src="https://picsum.photos/id/1065/400/600" alt=""></div>
-    <div class="gallery-item show"><img src="https://picsum.photos/id/1075/400/500" alt=""></div>
-    <div class="gallery-item show"><img src="https://picsum.photos/id/1025/400/400" alt=""></div>
   </div>
 
-  <!-- Button Xem thêm -->
+  <!-- Load More Button -->
   <div class="load-more-box">
     <button id="loadMore">Xem thêm</button>
   </div>
@@ -318,7 +327,7 @@
     <img id="lightboxImg" src="" alt="">
   </div>
 
-  <!-- Sidebar menu -->
+  <!-- Sidebar Menu -->
   <aside class="menu-panel" id="menuPanel">
     <ul class="menu-links">
       <li><a href="index.html">Home</a></li>
@@ -364,16 +373,14 @@
       if (e.target === lightbox) lightbox.classList.remove('active');
     });
 
-    // Load more
+    // Load More
     const gallery = document.getElementById('gallery');
     const loadMoreBtn = document.getElementById('loadMore');
 
     const moreImages = [
-      "https://picsum.photos/id/1025/1200/1800",
-      "https://picsum.photos/id/1025/1200/1800",
-      "https://picsum.photos/id/1025/1200/1800",
-      "https://picsum.photos/id/1025/1200/1800",
-      "https://picsum.photos/id/1025/1200/1800",
+      "https://picsum.photos/id/1065/400/600",
+      "https://picsum.photos/id/1075/400/500",
+      "https://picsum.photos/id/1025/400/400",
       "./images/chuyen_gia_dao_tao.png",
       "./images/hoang_thai_son.png"
     ];
